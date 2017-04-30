@@ -2,9 +2,12 @@ const dgram = require('dgram')
 const os = require('os')
 const path = require('path')
 const fs = require('fs')
-const uuidV4 = require('uuid/v4')
+const EventEmitter = require('events');
+const clone = require('clone')
+const uuidV4 = require('uuid/v4');
 const progress = require('progress-stream')
 
+var ProgressBar = require('progressbar.js')
 const dragDrop = require('drag-drop')
 const body = require('stream-body')
 const { remote, app } = require('electron')
@@ -31,16 +34,23 @@ const transfers = {
  *   progress: https://www.npmjs.com/package/progress-stream#progress
  * }
  */
+};
+const transfersEmitter = new EventEmitter();
+
+function updateTransfer(id, fields) {
+	if (!transfers[id]) {
+		transfers[id] = fields;
+	}
+	const old = clone(transfers[id])
+	Object.assign(transfers[id], fields);
+	if (transfers[id].progress) {
+	  console.log(`${Math.round(transfers[id].progress.percentage)}% ­ ${transfers[id].filename}`)
+	}
+	transfersEmitter.emit('change', old, transfers[id])
 }
 
-function updateTransfer (id, fields) {
-  if (!transfers[id]) {
-    transfers[id] = fields
-  }
-  Object.assign(transfers[id], fields)
-  if (transfers[id].progress) {
-	  console.log(`${Math.round(transfers[id].progress.percentage)}% ­ ${transfers[id].filename}`)
-  }
+function humanHostname(hostname) {
+  return hostname.replace(/\.local/g, '');
 }
 
 function send (o) {
@@ -63,7 +73,7 @@ setInterval(ping, 1500)
 function ping (extraAttrs = {}) {
   const attrs = Object.assign({}, {
     event: 'join',
-    name: os.hostname().replace(/\.local/g, ''),
+    name: humanHostname(os.hostname()),
     platform: os.platform(),
     ctime: Date.now()
   }, extraAttrs);
@@ -118,7 +128,7 @@ httpServer((req, res) => {
       'Do you want to accept the file',
       filename,
       'from',
-      req.headers['x-from'] + '?'
+      humanHostname(req.headers['x-from']) + '?'
     ].join(' ')
 
     const opts = {
@@ -138,7 +148,7 @@ httpServer((req, res) => {
 		  started: Date.now(),
 		  filename: req.headers['x-filename'],
 		  filesize: req.headers['x-filesize'],
-		  from: req.headers['x-from'],
+		  from: humanHostname(req.headers['x-from']),
 		  error: null,
 		  progress: null
 	  }
@@ -217,8 +227,8 @@ function onFilesDropped (ip, files) {
 //
 
 function joined (msg, rinfo) {
-  const me = os.hostname().replace(/\.local/g, '')
-  msg.name = msg.name.replace(/\.local/g, '')
+  const me = humanHostname(os.hostname())
+  msg.name = humanHostname(msg.name)
 
   //
   // Don't show me my own machine as a peer
@@ -237,7 +247,10 @@ function joined (msg, rinfo) {
   // Otherwise, create a peer and add it to the list.
   //
   const peers = document.querySelector('#peers')
+  const barElement = document.createElement('div');
+  barElement.className = 'bar';
   const peer = document.createElement('div')
+  peer.appendChild(barElement);
 
   peer.className = 'peer adding adding-anim'
   peer.setAttribute('data-name', msg.name)
@@ -252,6 +265,24 @@ function joined (msg, rinfo) {
   name.textContent = msg.name
   name.title = rinfo.address
   peer.appendChild(name)
+
+  const progressBar = new ProgressBar.Circle(barElement, {
+    strokeWidth: 6,
+    easing: 'easeInOut',
+    duration: 500,
+    color: '#ED6A5A',
+    trailColor: 'transparent',
+    trailWidth: 1,
+    svgStyle: null
+  });
+
+  transfersEmitter.on('change', (old, current) => {
+    if (current.from !== msg.name) {
+      return
+	}
+    const activeForMe = Object.values(transfers).filter( t => t.from === msg.name && t.progress && (t.progress.percentage < 100 || old.progress === null || old.id === t.id))
+    progressBar.animate(activeForMe.reduce((a, v) => a + v.progress.transferred, 0 ) / activeForMe.reduce((a, v) => a + v.progress.length, 0))
+  })
 
   peers.appendChild(peer)
 

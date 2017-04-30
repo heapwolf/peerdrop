@@ -58,6 +58,10 @@ body.darwin .close {
   transform: scale(1.1);
 }
 
+.peer .bar {
+	width: 119px;
+}
+
 .peer address {
   position: absolute;
   bottom: -35px;
