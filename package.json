@@ -4,9 +4,7 @@
   "description": "An airdrop clone",
   "main": "index.js",
   "dependencies": {
-    "alac": "^0.1.0",
-    "electron": "^1.6.6",
-    "mdns": "^2.3.3"
+    "electron": "^1.6.6"
   },
   "devDependencies": {},
   "scripts": {
