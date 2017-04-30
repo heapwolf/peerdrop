@@ -83,7 +83,7 @@ httpServer((req, res) => {
 
     const opts = {
       type: 'question',
-      buttons: ['ok', 'cancel'],
+      buttons: ['Ok', 'Cancel'],
       title: 'Confirm',
       message
     }
