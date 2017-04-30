@@ -1,5 +1,6 @@
 const dgram = require('dgram')
 const os = require('os')
+const dragDrop = require('drag-drop')
 
 const client = dgram.createSocket('udp4')
 const server = dgram.createSocket('udp4')
@@ -12,16 +13,30 @@ function send (o) {
   client.send(message, 0, message.length, PORT, MC)
 }
 
+//
+// Advertise a message
+//
 setInterval(() => {
   send({
     event: 'join',
     name: os.hostname(),
     platform: os.platform()
   })
+  console.log('sending')
 }, 1500)
 
 const registry = {}
 
+function getPictureData (src, cb) {
+  const reader = new window.FileReader()
+  reader.onerror = err => cb(err)
+  reader.onload = e => cb(null, e.target.result)
+  reader.readAsDataURL(src)
+}
+
+dragDrop('.drop', (files) => {
+  console.log(files)
+})
 //
 // Create a tcp server
 //
@@ -72,6 +87,7 @@ server.on('error', (err) => {
 
 server.on('message', (msg, rinfo) => {
   msg = JSON.parse(msg)
+  console.log(msg)
   if (!registry[msg] && msg.event === 'join') {
     joined(msg, rinfo)
   }
