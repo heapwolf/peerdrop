@@ -294,10 +294,8 @@ function joined (msg, rinfo) {
       return
     }
     const progress = activeForMe.reduce((a, v) => a + v.progress.transferred, 0) / activeForMe.reduce((a, v) => a + v.progress.length, 0)
-    if (progress < 1.0) {
-      progressBar.animate(progress)
-    } else {
-      progressBar.set(1.0)
+    progressBar.animate(progress)
+    if (current.progress && current.progress.percentage == 100 && !current.finished) {
       const opts = {
         type: 'info',
         buttons: ['Ok'],
@@ -305,8 +303,10 @@ function joined (msg, rinfo) {
         message: `The file ${current.filename} was successfully downloaded.`
       }
       dialog.showMessageBox(win, opts)
-      progressBar.set(0)
       updateTransfer(current.id, {finished: true})
+    }
+    if (progress >= 1.0) {
+      progressBar.set(0);
     }
   })
 
