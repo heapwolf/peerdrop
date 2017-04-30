@@ -2,6 +2,7 @@ const dgram = require('dgram')
 const os = require('os')
 const path = require('path')
 const fs = require('fs')
+const progress = require('progress-stream');
 
 const dragDrop = require('drag-drop')
 const { remote, app } = require('electron')
@@ -88,13 +89,21 @@ httpServer((req, res) => {
       message
     }
 
+    const progressStream = progress({
+      length: req.headers['x-filesize'],
+      time: 100 /* ms */
+    });
+	progressStream.on('progress', (progress) => {
+		console.log(progress);
+	});
+
     const result = dialog.showMessageBox(win, opts)
 
     if (result === 0) {
       const dest = path.join(remote.app.getPath('downloads'), filename)
       const writeStream = fs.createWriteStream(dest)
 
-      req.pipe(writeStream)
+      req.pipe(progressStream).pipe(writeStream)
     }
   } else {
     // TODO serve the app so people can download it
@@ -121,7 +130,8 @@ function onFilesDropped (ip, files) {
       headers: {
         'Content-Type': file.type,
         'x-filename': file.name,
-        'x-from': os.hostname()
+        'x-from': os.hostname(),
+		'x-filesize': file.size,
       }
     }
 
