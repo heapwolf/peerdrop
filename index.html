@@ -18,6 +18,11 @@
     font-family: monospace;
   }
 
+  #me {
+    position: absolute;
+    bottom: 0;
+  }
+
   </style>
 
   </head>
@@ -31,12 +36,20 @@
 
     <h1>Hello</h1>
 
+    <p id="empty-message">Sorry, nobody else is online yet :/</p>
+
+
+
     <div id="peers">
+    <!-- dummies -->
+      <div class="peer" id="me">
+      <p>
+        this is me
+      </p>
+
+
+      </div>
     </div>
-
-    <div id="readme"></div>
-
-
 
   <body>
 

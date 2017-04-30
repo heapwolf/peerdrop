@@ -43,6 +43,11 @@ function joined (msg, rinfo) {
 
   peers.appendChild(peer)
 
+  // WIP remove no-one-here message
+  // const selectorEmptyState = document.querySelector('#empty-message')
+  // document.querySelector(`data-name="${msg.name}"]`)
+
+
   console.log(msg, rinfo)
 }
 

@@ -15,3 +15,8 @@ To run the app, use the bin in the `node_modules` directory.
 ./node_modules/.bin/electron ./index.js
 ```
 
+or run with nodemon to restart on changes
+
+```bash
+./node_modules/.bin/nodemon ./node_modules/.bin/electron ./index.js
+```
