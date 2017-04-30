@@ -123,8 +123,8 @@ function joined (msg, rinfo) {
   peer.setAttribute('data-ip', rinfo.address)
   peer.setAttribute('data-platform', msg.platform)
 
-  const avatar = document.createElement('img')
-  avatar.className = 'avatar'
+  const avatar = document.createElement('div')
+  avatar.className = 'avatar ' + msg.platform
   peer.appendChild(avatar)
 
   const name = document.createElement('address')

@@ -42,19 +42,22 @@
   }
 
   .avatar {
-    border-radius: 99em;
-    border: 2px solid #666;
     width: 80px;
     height: 80px;
+    background-size: cover;
+    backgorund-position: center center;
   }
 
-  .avatar:after {
-    position: relative;
-    border-radius: 99em;
-    border 2px solid #666;
-    width: 50%
-    height: 50%
-    margin: 25%
+  .avatar.linux {
+    background-image: url('./assets/linux.svg')
+  }
+
+  .avatar.darwin {
+    background-image: url('./assets/darwin.svg')
+  }
+
+  .avatar.win32 {
+    background-image: url('./assets/win32.svg')
   }
 
   .close {
