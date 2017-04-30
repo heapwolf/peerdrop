@@ -45,7 +45,7 @@ setInterval(() => {
 //
 const close = document.querySelector('.close')
 close.addEventListener('click', () => {
-  app.close()
+  remote.app.exit();
 })
 
 const me = document.querySelector('#me')
