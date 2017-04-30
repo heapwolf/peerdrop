@@ -49,7 +49,12 @@ close.addEventListener('click', () => {
 })
 
 const me = document.querySelector('#me')
-me.textContent = os.hostname()
+try {
+  const d = fs.readFileSync(path.join(os.homedir(), 'avatar'))
+  me.style.backgroundImage = 'url("' + d + '")'
+} catch (ex) {
+  me.textContent = os.hostname()
+}
 
 //
 // Drop your avatar
@@ -62,7 +67,8 @@ dragDrop(me, (files) => {
   reader.onload = e => {
     me.style.backgroundImage = 'url("' + e.target.result + '")'
     me.textContent = ''
-    // fs.writeFileSync(
+
+    fs.writeFileSync(path.join(os.homedir(), 'avatar'), e.target.result)
   }
   reader.readAsDataURL(files[0])
 })
@@ -105,7 +111,15 @@ httpServer((req, res) => {
 
       req.pipe(progressStream).pipe(writeStream)
     }
-  } else {
+  } else if (req.url === '/avatar') {
+    const filepath = path.join(os.homedir(), 'avatar')
+    fs.readFile(filepath, (err, data) => {
+      if (err) {
+        res.statusCode = 404
+        return res.end('')
+      }
+      res.end(data)
+    })
     // TODO serve the app so people can download it
   }
 })
