@@ -62,7 +62,6 @@ function joined (msg, rinfo) {
   // const selectorEmptyState = document.querySelector('#empty-message')
   // document.querySelector(`data-name="${msg.name}"]`)
 
-
   console.log(msg, rinfo)
 }
 
@@ -87,11 +86,10 @@ server.on('error', (err) => {
 
 server.on('message', (msg, rinfo) => {
   msg = JSON.parse(msg)
-  console.log(msg)
-  if (!registry[msg] && msg.event === 'join') {
+  if (!registry[msg.name] && msg.event === 'join') {
     joined(msg, rinfo)
   }
-  registry[msg] = Date.now()
+  registry[msg.name] = Date.now()
 })
 
 server.on('listening', () => {
