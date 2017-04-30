@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg width="91px" height="78px" viewBox="0 0 91 78" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <!-- Generator: Sketch 42 (36781) - http://www.bohemiancoding.com/sketch -->
+    <title>avatar-placeholder</title>
+    <desc>Created with Sketch.</desc>
+    <defs></defs>
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="avatar-placeholder" fill-rule="nonzero" fill="#000000">
+            <g id="person">
+                <path d="M90.0265116,77.7301622 L90.0265116,59.7775135 C90.0265116,46.4858919 79.0176279,43.1571892 65.9982791,43.1571892 L24.2906512,43.1571892 C10.9411628,43.1571892 0.262418605,46.4858919 0.262418605,59.7775135 L0.262418605,77.7301622 L90.0265116,77.7301622 Z" id="Shape"></path>
+                <path d="M44.9793953,37.5074595 C55.3258837,37.5074595 63.3317674,29.2015135 63.3317674,19.2238378 C63.3317674,8.9172973 54.9936279,0.942324324 44.9793953,0.942324324 C34.6350233,0.942324324 26.6270233,9.25248649 26.6270233,19.2238378 C26.6270233,29.2015135 34.6350233,37.5074595 44.9793953,37.5074595" id="Shape"></path>
+            </g>
+        </g>
+    </g>
+</svg>
