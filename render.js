@@ -166,10 +166,8 @@ httpServer((req, res) => {
       console.log(`Staring download from ${transfer.from}, filename: ${transfer.filename}, size ${transfer.filesize} bytes, id ${transfer.id}`)
       req.pipe(progressStream).pipe(writeStream)
     } else if (result === 1) {
-      send({
-        event: 'reject',
-        name: humanHostname(os.hostname()),
-      })
+      res.statusCode = 403
+      return res.end('User rejected the upload')
     }
   } else if (req.url === '/avatar') {
     const filepath = path.join(os.homedir(), 'avatar')
@@ -194,10 +192,10 @@ function getData (src, cb) {
   reader.readAsArrayBuffer(src)
 }
 
-function onFilesDropped (ip, files) {
+function onFilesDropped(msg, files) {
   files.forEach(file => {
     const opts = {
-      host: ip,
+      host: msg.address,
       port: 9988,
       path: '/upload',
       method: 'POST',
@@ -213,6 +211,10 @@ function onFilesDropped (ip, files) {
     getData(file, (err, data) => {
       if (err) return console.error(err)
       const req = httpClient(opts, res => {
+        if (res.statusCode === 403) {
+          showRejectedMessage(msg)
+          return
+        }
         if (res.statusCode !== 200) {
           res.on('data', data => {
             console.error(res.statusCode, data)
@@ -266,7 +268,7 @@ function joined (msg, rinfo) {
 
   const name = document.createElement('address')
   name.textContent = msg.name
-  name.title = rinfo.address
+  name.address = rinfo.address
   peer.appendChild(name)
 
   const progressBar = new ProgressBar.Circle(barElement, {
@@ -315,7 +317,7 @@ function joined (msg, rinfo) {
   // Add a drag drop event to the peer
   //
   dragDrop(peer, (files) => {
-    onFilesDropped(peer.getAttribute('data-ip'), files)
+    onFilesDropped(registry[peer.getAttribute('data-name')], files)
   })
 
   //
@@ -336,7 +338,7 @@ function parted (msg) {
   if (peer) peer.parentNode.removeChild(peer)
 }
 
-function reject (msg) {
+function showRejectedMessage(msg) {
   const opts = {
     type: 'info',
     buttons: ['Ok'],
@@ -365,10 +367,6 @@ server.on('message', (msg, rinfo) => {
   msg = JSON.parse(msg)
   if (!registry[msg.name] && msg.event === 'join') {
     joined(msg, rinfo)
-  }
-
-  if (registry[msg.name] && msg.event === 'reject') {
-    reject(msg, rinfo)
   }
 
   if (msg.refreshAvatar) {
