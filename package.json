@@ -11,7 +11,7 @@
   "devDependencies": {},
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "./node_modules/.bin/nodemon ./node_modules/.bin/electron ./index.js"
+    "start": "./node_modules/.bin/nodemon --ext js,html --ignore node_modules/ ./node_modules/.bin/electron ./index.js"
   },
   "author": "",
   "license": "ISC"
