@@ -168,7 +168,7 @@ httpServer((req, res) => {
     } else if (result === 1) {
       send({
         event: 'reject',
-        name: os.hostname().replace(/\.local/g, '')
+        name: humanHostname(os.hostname()),
       })
     }
   } else if (req.url === '/avatar') {
