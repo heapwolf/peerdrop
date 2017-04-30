@@ -58,14 +58,18 @@ dragDrop(document.body, () => {})
 //
 // Advertise a message
 //
-setInterval(() => {
-  send({
+setInterval(ping, 1500)
+
+function ping (extraAttrs = {}) {
+  const attrs = Object.assign({}, {
     event: 'join',
     name: os.hostname().replace(/\.local/g, ''),
     platform: os.platform(),
     ctime: Date.now()
-  })
-}, 1500)
+  }, extraAttrs);
+
+  send(attrs);
+}
 
 //
 // Add a close button
@@ -97,6 +101,7 @@ dragDrop(me, (files) => {
     me.textContent = ''
 
     fs.writeFileSync(path.join(os.homedir(), 'avatar'), e.target.result)
+    ping({refreshAvatar: true})
   }
   reader.readAsDataURL(files[0])
 })
@@ -265,24 +270,7 @@ function joined (msg, rinfo) {
   //
   // Get the avatar from the user who joined
   //
-  const opts = {
-    host: rinfo.address,
-    port: 9988,
-    path: '/avatar',
-    rejectUnauthorized: false
-  }
-
-  const req = httpClient(opts, res => {
-    if (res.statusCode !== 200) {
-      return console.error('Unable to get avatar')
-    }
-    body.parse(res, (err, data) => {
-      if (err) return console.error('unable to get avatar')
-      peer.style.backgroundImage = 'url("' + data + '")'
-    })
-  })
-
-  req.end()
+  loadAvatar(rinfo.address, peer)
 
   //
   // remove inital empty message when finding peers
@@ -316,8 +304,33 @@ server.on('message', (msg, rinfo) => {
   if (!registry[msg.name] && msg.event === 'join') {
     joined(msg, rinfo)
   }
+  if (msg.refreshAvatar) {
+    const selector = `.peer[data-name="${msg.name}"]`
+    loadAvatar(rinfo.address, document.querySelector(selector));
+  }
   registry[msg.name] = msg
 })
+
+function loadAvatar (address, peerEl) {
+  const opts = {
+    host: address,
+    port: 9988,
+    path: '/avatar',
+    rejectUnauthorized: false
+  }
+
+  const req = httpClient(opts, res => {
+    if (res.statusCode !== 200) {
+      return console.error('Unable to get avatar')
+    }
+    body.parse(res, (err, data) => {
+      if (err) return console.error('unable to get avatar')
+      peerEl.style.backgroundImage = 'url("' + data + '")'
+    })
+  })
+
+  req.end()
+}
 
 server.on('listening', () => {
   console.log(`Listening on ${PORT}`)
