@@ -1,0 +1,30 @@
+  body {
+    padding: 1em;
+    font-family: sans-serif;
+    background-color: #E0E0DC;
+  }
+
+  .peerdrop-icon {
+    width: 145px;
+    display: block;
+  }
+
+  #peers {
+    display: flex;
+  }
+
+  .peer {
+    width: 20vw;
+    height: 20vw;
+  }
+
+  .peer address {
+    font-family: monospace;
+    font-size: 0.9rem;
+  }
+
+  #me {
+    position: absolute;
+    bottom: 0;
+  }
+

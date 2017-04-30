@@ -7,7 +7,8 @@ const windowOptions = {
   width: 600,
   height: 400,
   backgroundColor,
-  center: true
+  center: true,
+  frame: false
 }
 
 app.on('ready', () => {

@@ -1,47 +1,9 @@
 <html>
   <head>
-
-    <style>
-  body {
-    padding: 1em;
-    font-family: sans-serif;
-    background-color: #E0E0DC;
-  }
-
-  .peerdrop-icon {
-    width: 145px;
-    display: block;
-  }
-
-  #peers {
-    display: flex;
-  }
-
-  .peer {
-    width: 20vw;
-    height: 20vw;
-  }
-
-  .peer address {
-    font-family: monospace;
-    font-size: 0.9rem;
-  }
-
-  #me {
-    position: absolute;
-    bottom: 0;
-  }
-
-  </style>
-
+    <link rel="stylesheet" href="index.css">
   </head>
 
   <body class="drop">
-
-    <h1>
-      <img class="peerdrop-icon" src="assets/peerdrop-logo.svg" />
-      <span>PeerDrop</span>
-    </h1>
 
     <p id="empty-message">Sorry, nobody else is online yet :/</p>
 
@@ -53,14 +15,10 @@
       </div>
     </div>
 
-
     <script>
       const path = require('path')
       require(path.join(__dirname, 'render.js'))
     </script>
   </body>
 </html>
-
-
-
 
