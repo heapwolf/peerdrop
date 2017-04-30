@@ -1,7 +1,9 @@
   body {
+    -webkit-app-region: drag;
+    -webkit-user-select: none;
     padding: 1em;
     font-family: sans-serif;
-    background-color: #E0E0DC;
+    background-color: white;
   }
 
   .peerdrop-icon {
@@ -65,3 +67,34 @@
     bottom: 0;
   }
 
+  .avatar {
+    width: 80px;
+    height: 80px;
+    background-size: cover;
+    backgorund-position: center center;
+  }
+
+  .avatar.linux {
+    background-image: url('./assets/linux.svg')
+  }
+
+  .avatar.darwin {
+    background-image: url('./assets/darwin.svg')
+  }
+
+  .avatar.win32 {
+    background-image: url('./assets/win32.svg')
+  }
+
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 20px;
+    content: 'x';
+    cursor: pointer;
+  }
+
+  #empty-message {
+    padding-top 100px;
+  }

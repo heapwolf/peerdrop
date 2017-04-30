@@ -1,11 +1,12 @@
 const dgram = require('dgram')
 const os = require('os')
+const path = require('path')
+const fs = require('fs')
+
 const dragDrop = require('drag-drop')
-// const body = require('stream-body')
 const { remote } = require('electron')
 const dialog = remote.dialog
 const win = remote.getCurrentWindow()
-const fs = require('fs')
 
 const httpServer = require('./server')
 const httpClient = require('https').request
@@ -31,7 +32,6 @@ setInterval(() => {
     platform: os.platform(),
     ctime: Date.now()
   })
-  console.log('send announcement')
 }, 1500)
 
 httpServer((req, res) => {
@@ -76,7 +76,6 @@ function getData (src, cb) {
 
 function onFilesDropped (ip, files) {
   files.forEach(file => {
-    console.log(file)
     const opts = {
       host: ip,
       port: 9988,
@@ -92,13 +91,15 @@ function onFilesDropped (ip, files) {
 
     getData(file, (err, data) => {
       if (err) return console.error(err)
-      httpClient(opts, res => {
+      const req = httpClient(opts, res => {
         if (res.statusCode !== 200) {
           res.on('data', data => {
             console.error(res.statusCode, data)
           })
         }
-      }).end(new Buffer(data))
+      })
+
+      req.end(Buffer.from(data))
     })
   })
 }
@@ -122,8 +123,8 @@ function joined (msg, rinfo) {
   peer.setAttribute('data-ip', rinfo.address)
   peer.setAttribute('data-platform', msg.platform)
 
-  const avatar = document.createElement('img')
-  avatar.src = 'assets/avatar-placeholder.svg'
+  const avatar = document.createElement('div')
+  avatar.className = 'avatar ' + msg.platform
   peer.appendChild(avatar)
 
   const name = document.createElement('address')
