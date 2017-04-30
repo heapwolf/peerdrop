@@ -76,7 +76,7 @@ function parted (msg) {
 function cleanUp () {
   for (var key in registry) {
     console.log(Date.now() - registry[key].ctime, Date.now(), registry[key].ctime)
-    if (registry[key] && (Date.now() - registry[key].ctime) > 1500) {
+    if (registry[key] && (Date.now() - registry[key].ctime) > 9000) {
       parted(registry[key])
       registry[key] = null
     }
@@ -101,4 +101,4 @@ server.on('listening', () => {
 
 server.bind(PORT)
 
-setInterval(cleanUp, 1500)
+setInterval(cleanUp, 9000)
