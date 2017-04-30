@@ -11,8 +11,8 @@ const win = remote.getCurrentWindow()
 const httpServer = require('./server')
 const httpClient = require('https').request
 
-const client = dgram.createSocket('udp4')
-const server = dgram.createSocket('udp4')
+const client = dgram.createSocket({type:'udp4', reuseAddr: true})
+const server = dgram.createSocket({type:'udp4', reuseAddr: true})
 
 const PORT = 4321
 const MC = '224.0.0.1'
