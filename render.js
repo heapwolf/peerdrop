@@ -2,7 +2,7 @@ const dgram = require('dgram')
 const os = require('os')
 const path = require('path')
 const fs = require('fs')
-const progress = require('progress-stream');
+const progress = require('progress-stream')
 
 const dragDrop = require('drag-drop')
 const { remote, app } = require('electron')
@@ -12,8 +12,8 @@ const win = remote.getCurrentWindow()
 const httpServer = require('./server')
 const httpClient = require('https').request
 
-const client = dgram.createSocket({type:'udp4', reuseAddr: true})
-const server = dgram.createSocket({type:'udp4', reuseAddr: true})
+const client = dgram.createSocket({type: 'udp4', reuseAddr: true})
+const server = dgram.createSocket({type: 'udp4', reuseAddr: true})
 
 const PORT = 4321
 const MC = '224.0.0.1'
@@ -52,6 +52,7 @@ const me = document.querySelector('#me')
 try {
   const d = fs.readFileSync(path.join(os.homedir(), 'avatar'))
   me.style.backgroundImage = 'url("' + d + '")'
+  me.textContent = ''
 } catch (ex) {
   me.textContent = os.hostname()
 }
@@ -98,10 +99,10 @@ httpServer((req, res) => {
     const progressStream = progress({
       length: req.headers['x-filesize'],
       time: 100 /* ms */
-    });
-	progressStream.on('progress', (progress) => {
-		console.log(progress);
-	});
+    })
+    progressStream.on('progress', (progress) => {
+      console.log(progress)
+    })
 
     const result = dialog.showMessageBox(win, opts)
 
@@ -145,7 +146,7 @@ function onFilesDropped (ip, files) {
         'Content-Type': file.type,
         'x-filename': file.name,
         'x-from': os.hostname(),
-		'x-filesize': file.size,
+        'x-filesize': file.size
       }
     }
 
@@ -207,11 +208,11 @@ function joined (msg, rinfo) {
 
   peers.appendChild(peer)
 
-  window.requestAnimationFrame(() => requestAnimationFrame(() => peer.classList.remove('adding')));
+  window.requestAnimationFrame(() => requestAnimationFrame(() => peer.classList.remove('adding')))
   peer.addEventListener('transitionend', e => {
-    if (e.propertyName !== 'transform') return;
-    peer.classList.remove('adding-anim');
-  });
+    if (e.propertyName !== 'transform') return
+    peer.classList.remove('adding-anim')
+  })
   //
   // Add a drag drop event to the peer
   //
