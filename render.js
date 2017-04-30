@@ -2,7 +2,7 @@ const dgram = require('dgram')
 const os = require('os')
 const path = require('path')
 const fs = require('fs')
-const uuidV4 = require('uuid/v4');
+const uuidV4 = require('uuid/v4')
 const progress = require('progress-stream')
 
 const dragDrop = require('drag-drop')
@@ -31,16 +31,16 @@ const transfers = {
  *   progress: https://www.npmjs.com/package/progress-stream#progress
  * }
  */
-};
+}
 
-function updateTransfer(id, fields) {
-	if (!transfers[id]) {
-		transfers[id] = fields;
-	}
-	Object.assign(transfers[id], fields);
-	if (transfers[id].progress) {
+function updateTransfer (id, fields) {
+  if (!transfers[id]) {
+    transfers[id] = fields
+  }
+  Object.assign(transfers[id], fields)
+  if (transfers[id].progress) {
 	  console.log(`${Math.round(transfers[id].progress.percentage)}% ­ ${transfers[id].filename}`)
-	}
+  }
 }
 
 function send (o) {
@@ -123,7 +123,6 @@ httpServer((req, res) => {
       message
     }
 
-
     const result = dialog.showMessageBox(win, opts)
 
     if (result === 0) {
@@ -136,12 +135,12 @@ httpServer((req, res) => {
 		  filesize: req.headers['x-filesize'],
 		  from: req.headers['x-from'],
 		  error: null,
-		  progress: null,
+		  progress: null
 	  }
 	  updateTransfer(transfer.id, transfer)
       const progressStream = progress({
         length: transfer.filesize,
-        time: 500, /* ms */
+        time: 500 /* ms */
       })
       progressStream.on('progress', (progress) => {
 		  updateTransfer(transfer.id, {progress})
