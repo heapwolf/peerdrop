@@ -13,6 +13,7 @@
   #peers {
     display: flex;
     justify-content: space-around;
+    flex-wrap: wrap;
   }
 
   .peer {
@@ -26,6 +27,31 @@
     border-radius: 50%; 
     width: 200px;
     height: 200px;
+    animation-name: adding;
+    animation-duration: 0.8s;
+    margin: 1em;
+  }
+
+  @keyframes adding {
+    0% {
+      opacity: 0;
+      transform: scale(0);
+    }
+
+    75% {
+      opacity: 1;
+      transform: scale(1.1);
+      background-color: rgba(0, 161, 255, 0.3);
+    }
+
+    100% {
+      transform: scale(1);
+      background-color: rgba(0, 161, 255, 0.1);
+    }
+  }
+
+  .peer.adding {
+    transform: scale(1.2)
   }
 
   .peer address {
