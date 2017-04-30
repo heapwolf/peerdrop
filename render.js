@@ -196,7 +196,7 @@ function getData (src, cb) {
   reader.readAsArrayBuffer(src)
 }
 
-function onFilesDropped(msg, files) {
+function onFilesDropped (msg, files) {
   files.forEach(file => {
     const opts = {
       host: msg.address,
@@ -342,7 +342,7 @@ function parted (msg) {
   if (peer) peer.parentNode.removeChild(peer)
 }
 
-function showRejectedMessage(msg) {
+function showRejectedMessage (msg) {
   const opts = {
     type: 'info',
     buttons: ['Ok'],
@@ -412,4 +412,4 @@ server.on('listening', () => {
 
 server.bind(PORT)
 
-setInterval(cleanUp, 9000)
+setInterval(cleanUp, 5000)
