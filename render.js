@@ -43,14 +43,13 @@ function joined (msg, rinfo) {
 
   peers.appendChild(peer)
 
-  console.log(`${msg} discovered from ${rinfo.address}:${rinfo.port}`)
+  console.log(msg, rinfo)
 }
 
 function parted (msg) {
   const selector = `[data-name="${msg.name}"]`
   const peer = document.querySelector(selector)
   if (peer) peer.parentNode.removeChild(peer)
-  console.log(`${msg} has left the building`)
 }
 
 function cleanUp () {
@@ -63,7 +62,6 @@ function cleanUp () {
 }
 
 server.on('error', (err) => {
-  console.log(`server error:\n${err.stack}`)
   server.close()
 })
 
