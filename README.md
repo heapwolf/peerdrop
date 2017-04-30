@@ -20,3 +20,9 @@ or run with nodemon to restart on changes
 ```bash
 ./node_modules/.bin/nodemon ./node_modules/.bin/electron ./index.js
 ```
+
+which is also wrapped with
+
+```bash
+npm start
+```
