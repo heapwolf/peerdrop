@@ -4,7 +4,7 @@ const path = require('path')
 const fs = require('fs')
 
 const dragDrop = require('drag-drop')
-const { remote } = require('electron')
+const { remote, app } = require('electron')
 const dialog = remote.dialog
 const win = remote.getCurrentWindow()
 
@@ -33,6 +33,11 @@ setInterval(() => {
     ctime: Date.now()
   })
 }, 1500)
+
+const close = document.querySelector('.close')
+close.addEventListener('click', () => {
+  app.close()
+})
 
 httpServer((req, res) => {
   const filename = req.headers['x-filename']
