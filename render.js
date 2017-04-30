@@ -199,7 +199,7 @@ function getData (src, cb) {
 function onFilesDropped (msg, files) {
   files.forEach(file => {
     const opts = {
-      host: msg.address,
+      host: msg.ip,
       port: 9988,
       path: '/upload',
       method: 'POST',
@@ -377,6 +377,7 @@ server.on('message', (msg, rinfo) => {
     const selector = `.peer[data-name="${msg.name}"]`
     loadAvatar(rinfo.address, document.querySelector(selector))
   }
+  msg.ip = rinfo.address
   registry[msg.name] = msg
 })
 
