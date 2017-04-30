@@ -119,3 +119,10 @@ body.darwin .close {
 #empty-message.show {
   opacity: 1;
 }
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+}
