@@ -55,6 +55,7 @@ function joined (msg, rinfo) {
   peer.setAttribute('data-name', msg.name)
   peer.setAttribute('data-ip', rinfo.address)
   peer.setAttribute('data-platform', msg.platform)
+  peer.textContent = msg.name
 
   peers.appendChild(peer)
 
