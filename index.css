@@ -131,7 +131,6 @@ body.darwin .close {
   position: absolute;
   bottom: 0;
   text-align: center;
-  width: 100%;
   font-size: 12px;
   color: #999;
 }
