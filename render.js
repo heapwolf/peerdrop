@@ -46,7 +46,7 @@ setInterval(() => {
 //
 const close = document.querySelector('.close')
 close.addEventListener('click', () => {
-  remote.app.exit();
+  remote.app.exit()
 })
 
 const me = document.querySelector('#me')
@@ -234,7 +234,7 @@ function joined (msg, rinfo) {
 
   const req = httpClient(opts, res => {
     if (res.statusCode !== 200) {
-      console.error('Unable to get avatar')
+      return console.error('Unable to get avatar')
     }
     body.parse(res, (err, data) => {
       if (err) return console.error('unable to get avatar')
