@@ -2,7 +2,11 @@
 An airdrop clone
 
 # AVATAR
-Add an image at ~/avatar
+
+Drop an image to your own bubble at the bottom. PeerDrop will persist this at `~/avatar/`
+
+![image](https://cloud.githubusercontent.com/assets/170145/25565945/3aaed0e0-2dd1-11e7-8960-4e29b5ae6274.png)
+
 
 # BUILD
 
