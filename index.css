@@ -1,7 +1,8 @@
 
 body {
   -webkit-user-select: none;
-  padding: 1em;
+  padding: 3em 0;
+  margin: 0px;
   font-family: sans-serif;
   background-color: white;
 }
@@ -129,7 +130,7 @@ body.darwin .close {
 
 .footer {
   position: absolute;
-  bottom: 0;
+  bottom: 14px;
   text-align: center;
   width: calc(100% - 2em);
   font-size: 12px;

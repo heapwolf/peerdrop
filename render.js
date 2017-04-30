@@ -178,8 +178,12 @@ httpServer((req, res) => {
       }
       res.end(data)
     })
-  } else {
+  } else if (req.url === '/linux') {
     // TODO serve the app so people can download it
+  } else if (req.url === '/mac') {
+
+  } else if (req.url === '/win') {
+
   }
 })
 
