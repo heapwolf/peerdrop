@@ -1,7 +1,11 @@
 const dgram = require('dgram')
 const os = require('os')
 const dragDrop = require('drag-drop')
-const body = require('stream-body')
+// const body = require('stream-body')
+const { remote } = require('electron')
+const dialog = remote.dialog
+const win = remote.getCurrentWindow()
+const fs = require('fs')
 
 const httpServer = require('./server')
 const httpClient = require('https').request
@@ -31,10 +35,31 @@ setInterval(() => {
 }, 1500)
 
 httpServer((req, res) => {
-  if (req.method === 'POST') {
-    body.parse(req, (err, data) => {
-      if (err) return console.error(data)
-    })
+  const filename = req.headers['x-filename']
+
+  if (req.url === '/upload') {
+    const message = [
+      'Do you want to accept the file',
+      filename,
+      'from',
+      req.headers['x-from'] + '?'
+    ].join(' ')
+
+    const opts = {
+      type: 'question',
+      buttons: ['ok', 'cancel'],
+      title: 'Confirm',
+      message
+    }
+
+    const result = dialog.showMessageBox(win, opts)
+
+    if (result === 0) {
+      const dest = path.join(remote.app.getPath('downloads'), filename)
+      const writeStream = fs.createWriteStream(dest)
+
+      req.pipe(writeStream)
+    }
   } else {
     // TODO serve the app so people can download it
   }
@@ -46,17 +71,23 @@ function getData (src, cb) {
   const reader = new window.FileReader()
   reader.onerror = err => cb(err)
   reader.onload = e => cb(null, e.target.result)
-  reader.readAsBinaryString(src)
+  reader.readAsArrayBuffer(src)
 }
 
 function onFilesDropped (ip, files) {
   files.forEach(file => {
+    console.log(file)
     const opts = {
       host: ip,
       port: 9988,
-      path: '/',
+      path: '/upload',
       method: 'POST',
-      rejectUnauthorized: false
+      rejectUnauthorized: false,
+      headers: {
+        'Content-Type': file.type,
+        'x-filename': file.name,
+        'x-from': os.hostname()
+      }
     }
 
     getData(file, (err, data) => {
@@ -67,7 +98,7 @@ function onFilesDropped (ip, files) {
             console.error(res.statusCode, data)
           })
         }
-      }).end(data)
+      }).end(new Buffer(data))
     })
   })
 }
@@ -109,8 +140,6 @@ function joined (msg, rinfo) {
   // remove inital empty message when finding peers
   const selectorEmptyState = document.querySelector('#empty-message')
   if (selectorEmptyState) selectorEmptyState.parentNode.removeChild(selectorEmptyState)
-
-  console.log(msg, rinfo)
 }
 
 function parted (msg) {
@@ -121,7 +150,6 @@ function parted (msg) {
 
 function cleanUp () {
   for (var key in registry) {
-    console.log(Date.now() - registry[key].ctime, Date.now(), registry[key].ctime)
     if (registry[key] && (Date.now() - registry[key].ctime) > 9000) {
       parted(registry[key])
       registry[key] = null
