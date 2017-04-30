@@ -56,15 +56,18 @@ function joined (msg, rinfo) {
   peer.setAttribute('data-name', msg.name)
   peer.setAttribute('data-ip', rinfo.address)
   peer.setAttribute('data-platform', msg.platform)
-  peer.textContent = msg.name
-
-  peers.appendChild(peer)
 
   const avatar = document.createElement('img')
-  avatar.url = 'assets/user.svg'
+  avatar.src = 'assets/avatar-placeholder.svg'
   peer.appendChild(avatar)
 
-  peers.appendChild(peer)
+  const name = document.createElement('address')
+  name.textContent = msg.name
+  name.title = rinfo.address
+  peer.appendChild(name)
+
+
+    peers.appendChild(peer)
 
   // remove inital empty message when finding peers
   const selectorEmptyState = document.querySelector('#empty-message')
