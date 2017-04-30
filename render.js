@@ -27,6 +27,7 @@ setInterval(() => {
     platform: os.platform(),
     ctime: Date.now()
   })
+  console.log('send announcement')
 }, 1500)
 
 httpServer((req, res) => {
@@ -99,8 +100,7 @@ function joined (msg, rinfo) {
   name.title = rinfo.address
   peer.appendChild(name)
 
-
-    peers.appendChild(peer)
+  peers.appendChild(peer)
 
   dragDrop(peer, (files) => {
     onFilesDropped(peer.getAttribute('data-ip'), files)
