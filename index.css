@@ -52,10 +52,6 @@
     }
   }
 
-  .peer.adding {
-    transform: scale(1.2)
-  }
-
   .peer address {
     margin-top: 0.5rem;
     font-family: monospace;
