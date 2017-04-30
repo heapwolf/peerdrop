@@ -167,7 +167,7 @@ function joined (msg, rinfo) {
   const peers = document.querySelector('#peers')
   const peer = document.createElement('div')
 
-  peer.className = 'peer'
+  peer.className = 'peer adding adding-anim'
   peer.setAttribute('data-name', msg.name)
   peer.setAttribute('data-ip', rinfo.address)
   peer.setAttribute('data-platform', msg.platform)
@@ -183,6 +183,11 @@ function joined (msg, rinfo) {
 
   peers.appendChild(peer)
 
+  window.requestAnimationFrame(() => requestAnimationFrame(() => peer.classList.remove('adding')));
+  peer.addEventListener('transitionend', e => {
+    if (e.propertyName !== 'transform') return;
+    peer.classList.remove('adding-anim');
+  });
   //
   // Add a drag drop event to the peer
   //

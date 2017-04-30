@@ -18,6 +18,15 @@ body {
   flex-wrap: wrap;
 }
 
+.peer.adding {
+  opacity: 0;
+  transform: scale(0);
+}
+
+.peer.adding-anim {
+  transition: all 0.8s cubic-bezier(0.25, 0.1, 0.85, 1.45);
+}
+
 .peer {
   position: relative;
   display: flex;
@@ -30,10 +39,6 @@ body {
   border-radius: 50%;
   width: 100px;
   height: 100px;
-  min-width: 100px;
-  min-height: 100px;
-  animation-name: adding;
-  animation-duration: 0.8s;
   transition: all .4s ease;
   margin: 1em;
   border: 2px solid transparent;
@@ -42,24 +47,6 @@ body {
 .peer.drag {
   border: 2px solid;
   transform: scale(1.1);
-}
-
-@keyframes adding {
-  0% {
-    opacity: 0;
-    transform: scale(0);
-  }
-
-  75% {
-    opacity: 1;
-    transform: scale(1.1);
-    background-color: rgba(0, 0, 0, 0.3);
-  }
-
-  100% {
-    transform: scale(1);
-    background-color: rgba(0, 0, 0, 0.1);
-  }
 }
 
 .peer address {
