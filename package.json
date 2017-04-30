@@ -4,6 +4,7 @@
   "description": "An airdrop clone",
   "main": "index.js",
   "dependencies": {
+    "drag-drop": "^2.13.2",
     "electron": "^1.6.6",
     "nodemon": "^1.11.0"
   },
