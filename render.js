@@ -140,7 +140,16 @@ function onFilesDropped (ip, files) {
 //
 
 function joined (msg, rinfo) {
+  const me = os.hostname().replace(/\.local/g, '')
   msg.name = msg.name.replace(/\.local/g, '')
+
+  //
+  // Don't show me my own machine as a peer
+  //
+  if (!process.env['DEBUG'] && msg.name === me) {
+    return
+  }
+
   //
   // If the peer is already rendered, just return
   //
