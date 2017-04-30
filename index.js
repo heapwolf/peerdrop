@@ -8,9 +8,13 @@ const windowOptions = {
   height: 500,
   backgroundColor,
   center: true,
-  frame: false,
+  frame: true,
   minHeight: 500,
   minWidth: 800
+}
+
+if (process.platform === 'darwin') {
+  windowOptions.frame = false
 }
 
 app.on('ready', () => {

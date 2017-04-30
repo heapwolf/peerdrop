@@ -48,6 +48,8 @@ function send (o) {
   client.send(message, 0, message.length, PORT, MC)
 }
 
+document.body.classList.add(process.platform)
+
 //
 // Dont accept arbitrary drops
 //
@@ -146,6 +148,11 @@ httpServer((req, res) => {
       })
 	  console.log(`Staring download from ${transfer.from}, filename: ${transfer.filename}, size ${transfer.filesize} bytes, id ${transfer.id}`)
       req.pipe(progressStream).pipe(writeStream)
+    } else if (result === 1) {
+      send({
+        event: 'reject',
+        name: os.hostname().replace(/\.local/g, '')
+      })
     }
   } else if (req.url === '/avatar') {
     const filepath = path.join(os.homedir(), 'avatar')

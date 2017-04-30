@@ -1,9 +1,17 @@
+
 body {
-  -webkit-app-region: drag;
   -webkit-user-select: none;
   padding: 1em;
   font-family: sans-serif;
   background-color: white;
+}
+
+body.darwin {
+  -webkit-app-region: drag;
+}
+
+body.darwin .close {
+  display: block;
 }
 
 .peerdrop-icon {
@@ -60,6 +68,8 @@ body {
   position: absolute;
   background-size: cover;
   bottom: 0;
+  width: 80px;
+  height: 80px;
 }
 
 .avatar {
@@ -82,6 +92,7 @@ body {
 }
 
 .close {
+  display: none;
   position: absolute;
   top: 20px;
   right: 20px;
