@@ -13,13 +13,17 @@
     display: block;
   }
 
-  #peers {
+      .main-grid {
+        display: flex;
+      }
+
+  #peers, #dropzone {
+    width: 49vw;
   }
 
   .peer {
-
-
   }
+
   [data-name] {
     font-family: monospace;
   }
@@ -33,12 +37,7 @@
 
   </head>
 
-
-
-  <body>
-
-    <div class="peers">
-    </div>
+  <body class="drop">
 
     <h1>
       <img class="peerdrop-icon" src="assets/peerdrop-logo.svg" />
@@ -47,29 +46,25 @@
 
     <p id="empty-message">Sorry, nobody else is online yet :/</p>
 
+    <div class="main-grid">
 
 
-    <div id="peers">
-    <!-- dummies -->
-      <div class="peer" id="me">
-      <p>
-        this is me
-      </p>
-
-
+      <div id="peers">
+      <!-- dummies -->
+        <div class="peer" id="me">
+          <p>this is me</p>
+        </div>
+      </div>
+      <div id="dropzone">
+        drop it like it's hot!
       </div>
     </div>
 
-  <body class="drop">
 
     <script>
     const path = require('path')
     require(path.join(__dirname, 'render.js'))
-  </script>
-
-
-
-
+    </script>
 
 </html>
 

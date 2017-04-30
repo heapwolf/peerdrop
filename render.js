@@ -60,6 +60,12 @@ function joined (msg, rinfo) {
 
   peers.appendChild(peer)
 
+  const avatar = document.createElement('img')
+  avatar.url = 'assets/user.svg'
+  peer.appendChild(avatar)
+
+  peers.appendChild(peer)
+
   // remove inital empty message when finding peers
   const selectorEmptyState = document.querySelector('#empty-message')
   if (selectorEmptyState) selectorEmptyState.parentNode.removeChild(selectorEmptyState)
