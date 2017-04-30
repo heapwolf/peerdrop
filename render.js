@@ -5,6 +5,7 @@ const fs = require('fs')
 const progress = require('progress-stream')
 
 const dragDrop = require('drag-drop')
+const body = require('stream-body')
 const { remote, app } = require('electron')
 const dialog = remote.dialog
 const win = remote.getCurrentWindow()
@@ -121,6 +122,7 @@ httpServer((req, res) => {
       }
       res.end(data)
     })
+  } else {
     // TODO serve the app so people can download it
   }
 })
@@ -220,9 +222,34 @@ function joined (msg, rinfo) {
     onFilesDropped(peer.getAttribute('data-ip'), files)
   })
 
+  //
+  // Get the avatar from the user who joined
+  //
+  const opts = {
+    host: rinfo.address,
+    port: 9988,
+    path: '/avatar',
+    rejectUnauthorized: false
+  }
+
+  const req = httpClient(opts, res => {
+    if (res.statusCode !== 200) {
+      console.error('Unable to get avatar')
+    }
+    body.parse(res, (err, data) => {
+      if (err) return console.error('unable to get avatar')
+      me.style.backgroundImage = 'url("' + data + '")'
+      me.textContent = ''
+    })
+  })
+
+  req.end()
+
+  //
   // remove inital empty message when finding peers
+  //
   const selectorEmptyState = document.querySelector('#empty-message')
-  if (selectorEmptyState) selectorEmptyState.parentNode.removeChild(selectorEmptyState)
+  selectorEmptyState.classList.remove('show')
 }
 
 function parted (msg) {
