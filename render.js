@@ -7,10 +7,6 @@ const server = dgram.createSocket('udp4')
 const PORT = 4321
 const MC = '224.0.0.1'
 
-const fs = require('fs')
-const path = require('path')
-const avatar = fs.readFileSync(path.join(__dirname, 'avatar'))
-
 function send (o) {
   const message = Buffer.from(JSON.stringify(o))
   client.send(message, 0, message.length, PORT, MC)
@@ -20,8 +16,7 @@ setInterval(() => {
   send({
     event: 'join',
     name: os.hostname(),
-    platform: os.platform(),
-    avatar: avatar
+    platform: os.platform()
   })
 }, 1500)
 
