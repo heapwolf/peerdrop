@@ -83,14 +83,17 @@ body.darwin .close {
   background-position: center center;
 }
 
+.peer address.linux,
 .avatar.linux {
   background-image: url('./assets/linux.svg')
 }
 
+.peer address.darwin,
 .avatar.darwin {
   background-image: url('./assets/darwin.svg')
 }
 
+.peer address.win32,
 .avatar.win32 {
   background-image: url('./assets/win32.svg')
 }

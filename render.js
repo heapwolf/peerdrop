@@ -2,15 +2,15 @@ const dgram = require('dgram')
 const os = require('os')
 const path = require('path')
 const fs = require('fs')
-const EventEmitter = require('events');
+const EventEmitter = require('events')
 const clone = require('clone')
-const uuidV4 = require('uuid/v4');
+const uuidV4 = require('uuid/v4')
 const progress = require('progress-stream')
 
 var ProgressBar = require('progressbar.js')
 const dragDrop = require('drag-drop')
 const body = require('stream-body')
-const { remote, app } = require('electron')
+const { remote } = require('electron')
 const dialog = remote.dialog
 const win = remote.getCurrentWindow()
 
@@ -34,23 +34,23 @@ const transfers = {
  *   progress: https://www.npmjs.com/package/progress-stream#progress
  * }
  */
-};
-const transfersEmitter = new EventEmitter();
+}
+const transfersEmitter = new EventEmitter()
 
-function updateTransfer(id, fields) {
-	if (!transfers[id]) {
-		transfers[id] = fields;
-	}
-	const old = clone(transfers[id])
-	Object.assign(transfers[id], fields);
-	if (transfers[id].progress) {
+function updateTransfer (id, fields) {
+  if (!transfers[id]) {
+    transfers[id] = fields
+  }
+  const old = clone(transfers[id])
+  Object.assign(transfers[id], fields)
+  if (transfers[id].progress) {
 	  console.log(`${Math.round(transfers[id].progress.percentage)}% ­ ${transfers[id].filename}`)
-	}
-	transfersEmitter.emit('change', old, transfers[id])
+  }
+  transfersEmitter.emit('change', old, transfers[id])
 }
 
-function humanHostname(hostname) {
-  return hostname.replace(/\.local/g, '');
+function humanHostname (hostname) {
+  return hostname.replace(/\.local/g, '')
 }
 
 function send (o) {
@@ -76,9 +76,9 @@ function ping (extraAttrs = {}) {
     name: humanHostname(os.hostname()),
     platform: os.platform(),
     ctime: Date.now()
-  }, extraAttrs);
+  }, extraAttrs)
 
-  send(attrs);
+  send(attrs)
 }
 
 //
@@ -143,24 +143,25 @@ httpServer((req, res) => {
     if (result === 0) {
       const dest = path.join(remote.app.getPath('downloads'), filename)
       const writeStream = fs.createWriteStream(dest)
-	  const transfer = {
-		  id: uuidV4(),
-		  started: Date.now(),
-		  filename: req.headers['x-filename'],
-		  filesize: req.headers['x-filesize'],
-		  from: humanHostname(req.headers['x-from']),
-		  error: null,
-		  progress: null
-	  }
-	  updateTransfer(transfer.id, transfer)
+      const transfer = {
+        id: uuidV4(),
+        started: Date.now(),
+        filename: req.headers['x-filename'],
+        filesize: req.headers['x-filesize'],
+        from: humanHostname(req.headers['x-from']),
+        error: null,
+        progress: null
+      }
+      updateTransfer(transfer.id, transfer)
+
       const progressStream = progress({
         length: transfer.filesize,
         time: 500 /* ms */
       })
       progressStream.on('progress', (progress) => {
-		  updateTransfer(transfer.id, {progress})
+        updateTransfer(transfer.id, {progress})
       })
-	  console.log(`Staring download from ${transfer.from}, filename: ${transfer.filename}, size ${transfer.filesize} bytes, id ${transfer.id}`)
+      console.log(`Staring download from ${transfer.from}, filename: ${transfer.filename}, size ${transfer.filesize} bytes, id ${transfer.id}`)
       req.pipe(progressStream).pipe(writeStream)
     } else if (result === 1) {
       send({
@@ -247,10 +248,10 @@ function joined (msg, rinfo) {
   // Otherwise, create a peer and add it to the list.
   //
   const peers = document.querySelector('#peers')
-  const barElement = document.createElement('div');
-  barElement.className = 'bar';
+  const barElement = document.createElement('div')
+  barElement.className = 'bar'
   const peer = document.createElement('div')
-  peer.appendChild(barElement);
+  peer.appendChild(barElement)
 
   peer.className = 'peer adding adding-anim'
   peer.setAttribute('data-name', msg.name)
@@ -274,14 +275,14 @@ function joined (msg, rinfo) {
     trailColor: 'transparent',
     trailWidth: 1,
     svgStyle: null
-  });
+  })
 
   transfersEmitter.on('change', (old, current) => {
     if (current.from !== msg.name) {
       return
-	}
-    const activeForMe = Object.values(transfers).filter( t => t.from === msg.name && t.progress && (t.progress.percentage < 100 || old.progress === null || old.id === t.id))
-    progressBar.animate(activeForMe.reduce((a, v) => a + v.progress.transferred, 0 ) / activeForMe.reduce((a, v) => a + v.progress.length, 0))
+    }
+    const activeForMe = Object.values(transfers).filter(t => t.from === msg.name && t.progress && (t.progress.percentage < 100 || old.progress === null || old.id === t.id))
+    progressBar.animate(activeForMe.reduce((a, v) => a + v.progress.transferred, 0) / activeForMe.reduce((a, v) => a + v.progress.length, 0))
   })
 
   peers.appendChild(peer)
@@ -316,6 +317,17 @@ function parted (msg) {
   if (peer) peer.parentNode.removeChild(peer)
 }
 
+function reject (msg) {
+  const opts = {
+    type: 'info',
+    buttons: ['Ok'],
+    title: 'Rejected',
+    message: `${msg.name} rejected the file.`
+  }
+
+  dialog.showMessageBox(win, opts)
+}
+
 function cleanUp () {
   for (var key in registry) {
     if (registry[key] && (Date.now() - registry[key].ctime) > 9000) {
@@ -335,9 +347,14 @@ server.on('message', (msg, rinfo) => {
   if (!registry[msg.name] && msg.event === 'join') {
     joined(msg, rinfo)
   }
+
+  if (registry[msg.name] && msg.event === 'reject') {
+    reject(msg, rinfo)
+  }
+
   if (msg.refreshAvatar) {
     const selector = `.peer[data-name="${msg.name}"]`
-    loadAvatar(rinfo.address, document.querySelector(selector));
+    loadAvatar(rinfo.address, document.querySelector(selector))
   }
   registry[msg.name] = msg
 })
@@ -354,8 +371,13 @@ function loadAvatar (address, peerEl) {
     if (res.statusCode !== 200) {
       return console.error('Unable to get avatar')
     }
+
     body.parse(res, (err, data) => {
       if (err) return console.error('unable to get avatar')
+
+      const avatar = peerEl.querySelector('.avatar')
+      avatar.className = 'avatar'
+
       peerEl.style.backgroundImage = 'url("' + data + '")'
     })
   })
