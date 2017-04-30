@@ -28,7 +28,7 @@ function send (o) {
 setInterval(() => {
   send({
     event: 'join',
-    name: os.hostname(),
+    name: os.hostname().replace(/\.local/g, ''),
     platform: os.platform(),
     ctime: Date.now()
   })
@@ -44,6 +44,22 @@ close.addEventListener('click', () => {
 
 const me = document.querySelector('#me')
 me.textContent = os.hostname()
+
+//
+// Drop your avatar
+//
+dragDrop(me, (files) => {
+  const reader = new window.FileReader()
+  reader.onerror = err => {
+    console.error(err)
+  }
+  reader.onload = e => {
+    me.style.backgroundImage = 'url("' + e.target.result + '")'
+    me.textContent = ''
+    // fs.writeFileSync(
+  }
+  reader.readAsDataURL(files[0])
+})
 
 //
 // Add our hostname to the `me` icon.
@@ -124,6 +140,7 @@ function onFilesDropped (ip, files) {
 //
 
 function joined (msg, rinfo) {
+  msg.name = msg.name.replace(/\.local/g, '')
   //
   // If the peer is already rendered, just return
   //

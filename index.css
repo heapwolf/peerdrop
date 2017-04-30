@@ -68,6 +68,7 @@ body {
 
 #me {
   position: absolute;
+  background-size: cover;
   bottom: 0;
 }
 
