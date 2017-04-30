@@ -30,6 +30,7 @@ const transfers = {
  *   started,
  *   filename,
  *   filesize,
+ *   finished
  *   error: object|null
  *   progress: https://www.npmjs.com/package/progress-stream#progress
  * }
@@ -150,7 +151,8 @@ httpServer((req, res) => {
         filesize: req.headers['x-filesize'],
         from: humanHostname(req.headers['x-from']),
         error: null,
-        progress: null
+        progress: null,
+        finished: false
       }
       updateTransfer(transfer.id, transfer)
 
@@ -281,8 +283,25 @@ function joined (msg, rinfo) {
     if (current.from !== msg.name) {
       return
     }
-    const activeForMe = Object.values(transfers).filter(t => t.from === msg.name && t.progress && (t.progress.percentage < 100 || old.progress === null || old.id === t.id))
-    progressBar.animate(activeForMe.reduce((a, v) => a + v.progress.transferred, 0) / activeForMe.reduce((a, v) => a + v.progress.length, 0))
+    const activeForMe = Object.values(transfers).filter(t => t.from === msg.name && t.progress && (t.progress.percentage < 100 || old.progress === null || old.id === t.id) && !t.finished)
+    if (activeForMe.length === 0) {
+      return
+    }
+    const progress = activeForMe.reduce((a, v) => a + v.progress.transferred, 0) / activeForMe.reduce((a, v) => a + v.progress.length, 0)
+    if (progress < 1.0) {
+      progressBar.animate(progress)
+    } else {
+      progressBar.set(1.0)
+      const opts = {
+        type: 'info',
+        buttons: ['Ok'],
+        title: 'Downloaded',
+        message: `The file ${current.filename} was successfully downloaded.`
+      }
+      dialog.showMessageBox(win, opts)
+      progressBar.set(0)
+      updateTransfer(current.id, {finished: true})
+    }
   })
 
   peers.appendChild(peer)
