@@ -30,6 +30,8 @@ body {
   border-radius: 50%;
   width: 100px;
   height: 100px;
+  min-width: 100px;
+  min-height: 100px;
   animation-name: adding;
   animation-duration: 0.8s;
   transition: all .4s ease;

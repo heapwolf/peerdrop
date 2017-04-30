@@ -4,11 +4,13 @@ const { app, BrowserWindow } = require('electron')
 const backgroundColor = '#ffffff'
 
 const windowOptions = {
-  width: 600,
-  height: 400,
+  width: 800,
+  height: 500,
   backgroundColor,
   center: true,
-  frame: false
+  frame: false,
+  minHeight: 500,
+  minWidth: 800
 }
 
 app.on('ready', () => {
