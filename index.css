@@ -92,3 +92,10 @@ body {
 #empty-message {
   padding-top 100px;
 }
+
+.footer {
+  position: absolute;
+  bottom: 0;
+  text-align: center;
+  width: 100%;
+}
