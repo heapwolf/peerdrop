@@ -238,8 +238,7 @@ function joined (msg, rinfo) {
     }
     body.parse(res, (err, data) => {
       if (err) return console.error('unable to get avatar')
-      me.style.backgroundImage = 'url("' + data + '")'
-      me.textContent = ''
+      peer.style.backgroundImage = 'url("' + data + '")'
     })
   })
 

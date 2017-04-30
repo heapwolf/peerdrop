@@ -42,6 +42,7 @@ body {
   transition: all .4s ease;
   margin: 1em;
   border: 2px solid transparent;
+  background-size: cover;
 }
 
 .peer.drag {
