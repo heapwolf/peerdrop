@@ -23,6 +23,11 @@ function send (o) {
 }
 
 //
+// Dont accept arbitrary drops
+//
+dragDrop(document.body, () => {})
+
+//
 // Advertise a message
 //
 setInterval(() => {
