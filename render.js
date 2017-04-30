@@ -1,6 +1,10 @@
 const dgram = require('dgram')
 const os = require('os')
 const dragDrop = require('drag-drop')
+const body = require('stream-body')
+
+const httpServer = require('./server')
+const httpClient = require('https').request
 
 const client = dgram.createSocket('udp4')
 const server = dgram.createSocket('udp4')
@@ -23,21 +27,50 @@ setInterval(() => {
     platform: os.platform(),
     ctime: Date.now()
   })
-  console.log('sending')
 }, 1500)
+
+httpServer((req, res) => {
+  if (req.method === 'POST') {
+    body.parse(req, (err, data) => {
+      if (err) return console.error(data)
+    })
+  } else {
+    // TODO serve the app so people can download it
+  }
+})
 
 const registry = {}
 
-function getPictureData (src, cb) {
+function getData (src, cb) {
   const reader = new window.FileReader()
   reader.onerror = err => cb(err)
   reader.onload = e => cb(null, e.target.result)
-  reader.readAsDataURL(src)
+  reader.readAsBinaryString(src)
 }
 
-dragDrop('.drop', (files) => {
-  console.log(files)
-})
+function onFilesDropped (ip, files) {
+  files.forEach(file => {
+    const opts = {
+      host: ip,
+      port: 9988,
+      path: '/',
+      method: 'POST',
+      rejectUnauthorized: false
+    }
+
+    getData(file, (err, data) => {
+      if (err) return console.error(err)
+      httpClient(opts, res => {
+        if (res.statusCode !== 200) {
+          res.on('data', data => {
+            console.error(res.statusCode, data)
+          })
+        }
+      }).end(data)
+    })
+  })
+}
+
 //
 // Create a tcp server
 //
@@ -69,6 +102,10 @@ function joined (msg, rinfo) {
 
     peers.appendChild(peer)
 
+  dragDrop(peer, (files) => {
+    onFilesDropped(peer.getAttribute('data-ip'), files)
+  })
+
   // remove inital empty message when finding peers
   const selectorEmptyState = document.querySelector('#empty-message')
   if (selectorEmptyState) selectorEmptyState.parentNode.removeChild(selectorEmptyState)
@@ -93,6 +130,7 @@ function cleanUp () {
 }
 
 server.on('error', (err) => {
+  console.error(err)
   server.close()
 })
 
