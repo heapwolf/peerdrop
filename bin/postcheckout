@@ -1,0 +1,11 @@
+#!/bin/bash
+
+set -eu
+
+ROOT_DIR=$(dirname $(dirname $0))
+
+DIFF=`git diff-index HEAD@{1} -- "$ROOT_DIR"/package.json`
+
+if [ "$DIFF" ]; then
+  npm install
+fi
