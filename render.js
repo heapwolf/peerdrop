@@ -20,7 +20,8 @@ setInterval(() => {
   send({
     event: 'join',
     name: os.hostname(),
-    platform: os.platform()
+    platform: os.platform(),
+    ctime: Date.now()
   })
   console.log('sending')
 }, 1500)
@@ -61,21 +62,22 @@ function joined (msg, rinfo) {
 
   // remove inital empty message when finding peers
   const selectorEmptyState = document.querySelector('#empty-message')
-  selectorEmptyState.parentNode.removeChild(selectorEmptyState)
+  if (selectorEmptyState) selectorEmptyState.parentNode.removeChild(selectorEmptyState)
 
   console.log(msg, rinfo)
 }
 
 function parted (msg) {
-  const selector = `[data-name="${msg.name}"]`
+  const selector = `.peer[data-name="${msg.name}"]`
   const peer = document.querySelector(selector)
   if (peer) peer.parentNode.removeChild(peer)
 }
 
 function cleanUp () {
   for (var key in registry) {
-    if (registry[key] && Date.now() - registry[key] > 5e4) {
-      parted(key)
+    console.log(Date.now() - registry[key].ctime, Date.now(), registry[key].ctime)
+    if (registry[key] && (Date.now() - registry[key].ctime) > 1500) {
+      parted(registry[key])
       registry[key] = null
     }
   }
@@ -90,7 +92,7 @@ server.on('message', (msg, rinfo) => {
   if (!registry[msg.name] && msg.event === 'join') {
     joined(msg, rinfo)
   }
-  registry[msg.name] = Date.now()
+  registry[msg.name] = msg
 })
 
 server.on('listening', () => {
@@ -99,4 +101,4 @@ server.on('listening', () => {
 
 server.bind(PORT)
 
-setInterval(cleanUp, 5e4)
+setInterval(cleanUp, 1500)
