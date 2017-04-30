@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "drag-drop": "^2.13.2",
+    "extract-zip": "=1.6.0",
     "electron": "^1.6.6",
     "husky": "^0.13.3",
     "nodemon": "^1.11.0",
