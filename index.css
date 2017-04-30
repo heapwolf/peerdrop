@@ -1,96 +1,104 @@
-  body {
-    -webkit-app-region: drag;
-    -webkit-user-select: none;
-    padding: 1em;
-    font-family: sans-serif;
-    background-color: white;
+body {
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
+  padding: 1em;
+  font-family: sans-serif;
+  background-color: white;
+}
+
+.peerdrop-icon {
+  flex: 0 1 auto;
+  width: 145px;
+  display: block;
+}
+
+#peers {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+}
+
+.peer {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  text-align: center;
+  flex: 0 1 auto;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+  width: 100px;
+  height: 100px;
+  animation-name: adding;
+  animation-duration: 0.8s;
+  transition: all .4s ease;
+  margin: 1em;
+  border: 2px solid transparent;
+}
+
+.peer.drag {
+  border: 2px solid;
+  transform: scale(1.1);
+}
+
+@keyframes adding {
+  0% {
+    opacity: 0;
+    transform: scale(0);
   }
 
-  .peerdrop-icon {
-    flex: 0 1 auto;
-    width: 145px;
-    display: block;
+  75% {
+    opacity: 1;
+    transform: scale(1.1);
+    background-color: rgba(0, 0, 0, 0.3);
   }
 
-  #peers {
-    display: flex;
-    justify-content: space-around;
-    flex-wrap: wrap;
+  100% {
+    transform: scale(1);
+    background-color: rgba(0, 0, 0, 0.1);
   }
+}
 
-  .peer {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    text-align: center;
-    flex: 0 1 auto;
-    background-color: rgba(0, 161, 255, 0.1);
-    border-radius: 50%; 
-    width: 200px;
-    height: 200px;
-    animation-name: adding;
-    animation-duration: 0.8s;
-    margin: 1em;
-  }
+.peer address {
+  position: absolute;
+  bottom: -35px;
+  font-size: .8rem;
+}
 
-  @keyframes adding {
-    0% {
-      opacity: 0;
-      transform: scale(0);
-    }
+#me {
+  position: absolute;
+  bottom: 0;
+}
 
-    75% {
-      opacity: 1;
-      transform: scale(1.1);
-      background-color: rgba(0, 161, 255, 0.3);
-    }
+.avatar {
+  width: 50px;
+  height: 50px;
+  background-size: cover;
+  backgorund-position: center center;
+}
 
-    100% {
-      transform: scale(1);
-      background-color: rgba(0, 161, 255, 0.1);
-    }
-  }
+.avatar.linux {
+  background-image: url('./assets/linux.svg')
+}
 
-  .peer address {
-    margin-top: 0.5rem;
-    font-family: monospace;
-    font-size: 1.3rem;
-  }
+.avatar.darwin {
+  background-image: url('./assets/darwin.svg')
+}
 
-  #me {
-    position: absolute;
-    bottom: 0;
-  }
+.avatar.win32 {
+  background-image: url('./assets/win32.svg')
+}
 
-  .avatar {
-    width: 80px;
-    height: 80px;
-    background-size: cover;
-    backgorund-position: center center;
-  }
+.close {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  font-size: 20px;
+  content: 'x';
+  cursor: pointer;
+}
 
-  .avatar.linux {
-    background-image: url('./assets/linux.svg')
-  }
-
-  .avatar.darwin {
-    background-image: url('./assets/darwin.svg')
-  }
-
-  .avatar.win32 {
-    background-image: url('./assets/win32.svg')
-  }
-
-  .close {
-    position: absolute;
-    top: 20px;
-    right: 20px;
-    font-size: 20px;
-    content: 'x';
-    cursor: pointer;
-  }
-
-  #empty-message {
-    padding-top 100px;
-  }
+#empty-message {
+  padding-top 100px;
+}

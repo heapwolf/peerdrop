@@ -34,10 +34,20 @@ setInterval(() => {
   })
 }, 1500)
 
+//
+// Add a close button
+//
 const close = document.querySelector('.close')
 close.addEventListener('click', () => {
   app.close()
 })
+
+const me = document.querySelector('#me')
+me.textContent = os.hostname()
+
+//
+// Add our hostname to the `me` icon.
+//
 
 httpServer((req, res) => {
   const filename = req.headers['x-filename']
@@ -120,6 +130,9 @@ function joined (msg, rinfo) {
   const selector = `[data-name="${msg.name}"]`
   if (document.querySelector(selector)) return
 
+  //
+  // Otherwise, create a peer and add it to the list.
+  //
   const peers = document.querySelector('#peers')
   const peer = document.createElement('div')
 
@@ -139,6 +152,9 @@ function joined (msg, rinfo) {
 
   peers.appendChild(peer)
 
+  //
+  // Add a drag drop event to the peer
+  //
   dragDrop(peer, (files) => {
     onFilesDropped(peer.getAttribute('data-ip'), files)
   })
