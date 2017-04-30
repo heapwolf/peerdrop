@@ -7,7 +7,6 @@
     "clone": "2.1.1",
     "drag-drop": "^2.13.2",
     "extract-zip": "=1.6.0",
-    "electron": "^1.6.6",
     "husky": "^0.13.3",
     "nodemon": "^1.11.0",
     "progress-stream": "2.0.0",
@@ -15,11 +14,19 @@
     "stream-body": "^1.0.5",
     "uuid": "3.0.1"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "electron": "^1.6.6"
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./node_modules/.bin/nodemon --ext js,html --ignore node_modules/ ./node_modules/.bin/electron ./index.js",
     "postcheckout": "bin/postcheckout"
+  },
+  "build": {
+    "mac": {
+      "icon": "./logo.icns",
+      "category": "public.app-category.utility"
+    }
   },
   "author": "",
   "license": "ISC"
