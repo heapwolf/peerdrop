@@ -58,9 +58,9 @@ function joined (msg, rinfo) {
 
   peers.appendChild(peer)
 
-  // WIP remove no-one-here message
-  // const selectorEmptyState = document.querySelector('#empty-message')
-  // document.querySelector(`data-name="${msg.name}"]`)
+  // remove inital empty message when finding peers
+  const selectorEmptyState = document.querySelector('#empty-message')
+  selectorEmptyState.parentNode.removeChild(selectorEmptyState)
 
   console.log(msg, rinfo)
 }
