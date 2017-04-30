@@ -9,7 +9,8 @@
     "husky": "^0.13.3",
     "nodemon": "^1.11.0",
     "progress-stream": "2.0.0",
-    "stream-body": "^1.0.5"
+    "stream-body": "^1.0.5",
+    "uuid": "3.0.1"
   },
   "devDependencies": {},
   "scripts": {

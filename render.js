@@ -2,6 +2,7 @@ const dgram = require('dgram')
 const os = require('os')
 const path = require('path')
 const fs = require('fs')
+const uuidV4 = require('uuid/v4');
 const progress = require('progress-stream')
 
 const dragDrop = require('drag-drop')
@@ -18,6 +19,29 @@ const server = dgram.createSocket({type: 'udp4', reuseAddr: true})
 
 const PORT = 4321
 const MC = '224.0.0.1'
+
+const transfers = {
+/*
+ * id: {
+ *   id,
+ *   started,
+ *   filename,
+ *   filesize,
+ *   error: object|null
+ *   progress: https://www.npmjs.com/package/progress-stream#progress
+ * }
+ */
+};
+
+function updateTransfer(id, fields) {
+	if (!transfers[id]) {
+		transfers[id] = fields;
+	}
+	Object.assign(transfers[id], fields);
+	if (transfers[id].progress) {
+	  console.log(`${Math.round(transfers[id].progress.percentage)}% ­ ${transfers[id].filename}`)
+	}
+}
 
 function send (o) {
   const message = Buffer.from(JSON.stringify(o))
@@ -97,20 +121,30 @@ httpServer((req, res) => {
       message
     }
 
-    const progressStream = progress({
-      length: req.headers['x-filesize'],
-      time: 100 /* ms */
-    })
-    progressStream.on('progress', (progress) => {
-      console.log(progress)
-    })
 
     const result = dialog.showMessageBox(win, opts)
 
     if (result === 0) {
       const dest = path.join(remote.app.getPath('downloads'), filename)
       const writeStream = fs.createWriteStream(dest)
-
+	  const transfer = {
+		  id: uuidV4(),
+		  started: Date.now(),
+		  filename: req.headers['x-filename'],
+		  filesize: req.headers['x-filesize'],
+		  from: req.headers['x-from'],
+		  error: null,
+		  progress: null,
+	  }
+	  updateTransfer(transfer.id, transfer)
+      const progressStream = progress({
+        length: transfer.filesize,
+        time: 500, /* ms */
+      })
+      progressStream.on('progress', (progress) => {
+		  updateTransfer(transfer.id, {progress})
+      })
+	  console.log(`Staring download from ${transfer.from}, filename: ${transfer.filename}, size ${transfer.filesize} bytes, id ${transfer.id}`)
       req.pipe(progressStream).pipe(writeStream)
     }
   } else if (req.url === '/avatar') {
