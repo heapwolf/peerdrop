@@ -1,5 +1,5 @@
 {
-  "name": "test",
+  "name": "peerdrop",
   "version": "1.0.0",
   "description": "An airdrop clone",
   "main": "index.js",
@@ -15,13 +15,16 @@
     "uuid": "3.0.1"
   },
   "devDependencies": {
-    "electron": "^1.6.6"
+    "electron": "^1.6.6",
+    "electron-builder": "^17.1.1"
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./node_modules/.bin/nodemon --ext js,html --ignore node_modules/ ./node_modules/.bin/electron ./index.js",
-    "postcheckout": "bin/postcheckout"
+    "postcheckout": "bin/postcheckout",
+    "build-linux": "build --linux zip deb"
   },
+<<<<<<< HEAD
   "build": {
     "mac": {
       "icon": "./logo.icns",
@@ -30,4 +33,11 @@
   },
   "author": "",
   "license": "ISC"
+=======
+  "author": "Offline Camp <camp@offlinefirst.org>",
+  "license": "ISC",
+  "build": {
+    "appId": "peerdrop.offlinefirst"
+  }
+>>>>>>> Add simple Linux build config
 }
