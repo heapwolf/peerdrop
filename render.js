@@ -33,6 +33,7 @@ const transfers = {
 /*
  * id: {
  *   id,
+ *   from,
  *   started,
  *   filename,
  *   filesize,
