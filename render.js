@@ -22,6 +22,12 @@ const server = dgram.createSocket({type: 'udp4', reuseAddr: true})
 
 const PORT = 4321
 const MC = '224.0.0.1'
+const PROGRESS_REPORT_INTERVAL = 500
+// should be a lot less than the report interval above, because if we
+// interrupt an animation before it's ended the animation callback is not
+// run and the success messages for files, except for the last one are not
+// shown
+const PROGRESS_ANIMATION_DURATION = 100
 
 const transfers = {
 /*
@@ -158,7 +164,7 @@ httpServer((req, res) => {
 
       const progressStream = progress({
         length: transfer.filesize,
-        time: 500 /* ms */
+        time: PROGRESS_REPORT_INTERVAL, /* ms */
       })
       progressStream.on('progress', (progress) => {
         updateTransfer(transfer.id, {progress})
@@ -278,7 +284,7 @@ function joined (msg, rinfo) {
   const progressBar = new ProgressBar.Circle(barElement, {
     strokeWidth: 6,
     easing: 'easeInOut',
-    duration: 500,
+    duration: PROGRESS_ANIMATION_DURATION,
     color: '#ED6A5A',
     trailColor: 'transparent',
     trailWidth: 1,
