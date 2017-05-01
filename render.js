@@ -294,20 +294,21 @@ function joined (msg, rinfo) {
       return
     }
     const progress = activeForMe.reduce((a, v) => a + v.progress.transferred, 0) / activeForMe.reduce((a, v) => a + v.progress.length, 0)
-    progressBar.animate(progress)
-    if (current.progress && current.progress.percentage == 100 && !current.finished) {
-      const opts = {
-        type: 'info',
-        buttons: ['Ok'],
-        title: 'Downloaded',
-        message: `The file ${current.filename} was successfully downloaded.`
+    progressBar.animate(progress, () => {
+      if (current.progress && current.progress.percentage == 100 && !current.finished) {
+        const opts = {
+          type: 'info',
+          buttons: ['Ok'],
+          title: 'Downloaded',
+          message: `✅ The file ${current.filename} was successfully downloaded.`
+        }
+        dialog.showMessageBox(win, opts)
+        updateTransfer(current.id, {finished: true})
       }
-      dialog.showMessageBox(win, opts)
-      updateTransfer(current.id, {finished: true})
-    }
-    if (progress >= 1.0) {
-      progressBar.set(0);
-    }
+      if (progress >= 1.0) {
+        progressBar.set(0);
+      }
+    })
   })
 
   peers.appendChild(peer)
