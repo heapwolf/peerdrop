@@ -24,20 +24,16 @@
     "postcheckout": "bin/postcheckout",
     "build-linux": "build --linux zip deb"
   },
-<<<<<<< HEAD
   "build": {
+    "appId": "peerdrop.offlinefirst",
     "mac": {
-      "icon": "./logo.icns",
+      "icon": "./icons/logo.icns",
       "category": "public.app-category.utility"
+    },
+    "linux": {
+      "icon": "./icons/"
     }
   },
-  "author": "",
-  "license": "ISC"
-=======
   "author": "Offline Camp <camp@offlinefirst.org>",
-  "license": "ISC",
-  "build": {
-    "appId": "peerdrop.offlinefirst"
-  }
->>>>>>> Add simple Linux build config
+  "license": "ISC"
 }

@@ -10,7 +10,16 @@ Drop an image to your own bubble at the bottom. PeerDrop will persist this at `~
 
 # BUILD
 
-You need to rebuild for latest electron
+## Linux
+
+`npm run build-linux` builds deb/zip packages
+
+### System Dependencies
+
+#### Arch Linux
+
+* graphicsmagick
+* libicns (AUR)
 
 # RUN
 To run the app, use the bin in the `node_modules` directory.
