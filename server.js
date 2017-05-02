@@ -7,7 +7,7 @@ const read = f => fs.readFileSync(path.join(__dirname, f), 'utf8')
 const opts = {
   key: read('./keys/key.pem'),
   cert: read('./keys/cert.pem'),
-  rejectUnauthorized: false
+  rejectUnauthorized: false,
 }
 
 module.exports = cb => {

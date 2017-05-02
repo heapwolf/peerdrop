@@ -11,7 +11,7 @@ const windowOptions = {
   frame: true,
   minHeight: 500,
   minWidth: 800,
-  title: 'Peerdrop'
+  title: 'Peerdrop',
 }
 
 //

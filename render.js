@@ -17,8 +17,8 @@ const win = remote.getCurrentWindow()
 const httpServer = require('./server')
 const httpClient = require('https').request
 
-const client = dgram.createSocket({type: 'udp4', reuseAddr: true})
-const server = dgram.createSocket({type: 'udp4', reuseAddr: true})
+const client = dgram.createSocket({ type: 'udp4', reuseAddr: true })
+const server = dgram.createSocket({ type: 'udp4', reuseAddr: true })
 
 const PORT = 4321
 const MC = '224.0.0.1'
@@ -30,7 +30,7 @@ const PROGRESS_REPORT_INTERVAL = 500
 const PROGRESS_ANIMATION_DURATION = 100
 
 const transfers = {
-/*
+  /*
  * id: {
  *   id,
  *   from,
@@ -45,23 +45,25 @@ const transfers = {
 }
 const transfersEmitter = new EventEmitter()
 
-function updateTransfer (id, fields) {
+function updateTransfer(id, fields) {
   if (!transfers[id]) {
     transfers[id] = fields
   }
   const old = clone(transfers[id])
   Object.assign(transfers[id], fields)
   if (transfers[id].progress) {
-	  console.log(`${Math.round(transfers[id].progress.percentage)}% ­ ${transfers[id].filename}`)
+    console.log(
+      `${Math.round(transfers[id].progress.percentage)}% ­ ${transfers[id].filename}`
+    )
   }
   transfersEmitter.emit('change', old, transfers[id])
 }
 
-function humanHostname (hostname) {
+function humanHostname(hostname) {
   return hostname.replace(/\.local/g, '')
 }
 
-function send (o) {
+function send(o) {
   const message = Buffer.from(JSON.stringify(o))
   client.send(message, 0, message.length, PORT, MC)
 }
@@ -78,13 +80,17 @@ dragDrop(document.body, () => {})
 //
 setInterval(ping, 1500)
 
-function ping (extraAttrs = {}) {
-  const attrs = Object.assign({}, {
-    event: 'join',
-    name: humanHostname(os.hostname()),
-    platform: os.platform(),
-    ctime: Date.now()
-  }, extraAttrs)
+function ping(extraAttrs = {}) {
+  const attrs = Object.assign(
+    {},
+    {
+      event: 'join',
+      name: humanHostname(os.hostname()),
+      platform: os.platform(),
+      ctime: Date.now(),
+    },
+    extraAttrs
+  )
 
   send(attrs)
 }
@@ -109,7 +115,7 @@ try {
 //
 // Drop your avatar
 //
-dragDrop(me, (files) => {
+dragDrop(me, files => {
   const reader = new window.FileReader()
   reader.onerror = err => {
     console.error(err)
@@ -119,7 +125,7 @@ dragDrop(me, (files) => {
     me.textContent = ''
 
     fs.writeFileSync(path.join(os.homedir(), 'avatar'), e.target.result)
-    ping({refreshAvatar: true})
+    ping({ refreshAvatar: true })
   }
   reader.readAsDataURL(files[0])
 })
@@ -136,14 +142,14 @@ httpServer((req, res) => {
       'Do you want to accept the file',
       filename,
       'from',
-      humanHostname(req.headers['x-from']) + '?'
+      humanHostname(req.headers['x-from']) + '?',
     ].join(' ')
 
     const opts = {
       type: 'question',
       buttons: ['Ok', 'Cancel'],
       title: 'Confirm',
-      message
+      message,
     }
 
     const result = dialog.showMessageBox(win, opts)
@@ -159,18 +165,20 @@ httpServer((req, res) => {
         from: humanHostname(req.headers['x-from']),
         error: null,
         progress: null,
-        finished: false
+        finished: false,
       }
       updateTransfer(transfer.id, transfer)
 
       const progressStream = progress({
         length: transfer.filesize,
-        time: PROGRESS_REPORT_INTERVAL, /* ms */
+        time: PROGRESS_REPORT_INTERVAL /* ms */,
       })
-      progressStream.on('progress', (progress) => {
-        updateTransfer(transfer.id, {progress})
+      progressStream.on('progress', progress => {
+        updateTransfer(transfer.id, { progress })
       })
-      console.log(`Staring download from ${transfer.from}, filename: ${transfer.filename}, size ${transfer.filesize} bytes, id ${transfer.id}`)
+      console.log(
+        `Staring download from ${transfer.from}, filename: ${transfer.filename}, size ${transfer.filesize} bytes, id ${transfer.id}`
+      )
       req.pipe(progressStream).pipe(writeStream)
     } else if (result === 1) {
       res.statusCode = 403
@@ -188,22 +196,20 @@ httpServer((req, res) => {
   } else if (req.url === '/linux') {
     // TODO serve the app so people can download it
   } else if (req.url === '/mac') {
-
   } else if (req.url === '/win') {
-
   }
 })
 
 const registry = {}
 
-function getData (src, cb) {
+function getData(src, cb) {
   const reader = new window.FileReader()
   reader.onerror = err => cb(err)
   reader.onload = e => cb(null, e.target.result)
   reader.readAsArrayBuffer(src)
 }
 
-function onFilesDropped (msg, files) {
+function onFilesDropped(msg, files) {
   files.forEach(file => {
     const opts = {
       host: msg.ip,
@@ -215,8 +221,8 @@ function onFilesDropped (msg, files) {
         'Content-Type': file.type,
         'x-filename': file.name,
         'x-from': os.hostname(),
-        'x-filesize': file.size
-      }
+        'x-filesize': file.size,
+      },
     }
 
     getData(file, (err, data) => {
@@ -242,7 +248,7 @@ function onFilesDropped (msg, files) {
 // Create a tcp server
 //
 
-function joined (msg, rinfo) {
+function joined(msg, rinfo) {
   const me = humanHostname(os.hostname())
   msg.name = humanHostname(msg.name)
 
@@ -289,38 +295,54 @@ function joined (msg, rinfo) {
     color: '#ED6A5A',
     trailColor: 'transparent',
     trailWidth: 1,
-    svgStyle: null
+    svgStyle: null,
   })
 
   transfersEmitter.on('change', (old, current) => {
     if (current.from !== msg.name) {
       return
     }
-    const activeForMe = Object.values(transfers).filter(t => t.from === msg.name && t.progress && (t.progress.percentage < 100 || old.progress === null || old.id === t.id) && !t.finished)
+    const activeForMe = Object.values(transfers).filter(
+      t =>
+        t.from === msg.name &&
+        t.progress &&
+        (t.progress.percentage < 100 ||
+          old.progress === null ||
+          old.id === t.id) &&
+        !t.finished
+    )
     if (activeForMe.length === 0) {
       return
     }
-    const progress = activeForMe.reduce((a, v) => a + v.progress.transferred, 0) / activeForMe.reduce((a, v) => a + v.progress.length, 0)
+    const progress =
+      activeForMe.reduce((a, v) => a + v.progress.transferred, 0) /
+      activeForMe.reduce((a, v) => a + v.progress.length, 0)
     progressBar.animate(progress, () => {
-      if (current.progress && current.progress.percentage == 100 && !current.finished) {
+      if (
+        current.progress &&
+        current.progress.percentage == 100 &&
+        !current.finished
+      ) {
         const opts = {
           type: 'info',
           buttons: ['Ok'],
           title: 'Downloaded',
-          message: `✅ The file ${current.filename} was successfully downloaded.`
+          message: `✅ The file ${current.filename} was successfully downloaded.`,
         }
         dialog.showMessageBox(win, opts)
-        updateTransfer(current.id, {finished: true})
+        updateTransfer(current.id, { finished: true })
       }
       if (progress >= 1.0) {
-        progressBar.set(0);
+        progressBar.set(0)
       }
     })
   })
 
   peers.appendChild(peer)
 
-  window.requestAnimationFrame(() => requestAnimationFrame(() => peer.classList.remove('adding')))
+  window.requestAnimationFrame(() =>
+    requestAnimationFrame(() => peer.classList.remove('adding'))
+  )
   peer.addEventListener('transitionend', e => {
     if (e.propertyName !== 'transform') return
     peer.classList.remove('adding-anim')
@@ -328,7 +350,7 @@ function joined (msg, rinfo) {
   //
   // Add a drag drop event to the peer
   //
-  dragDrop(peer, (files) => {
+  dragDrop(peer, files => {
     onFilesDropped(registry[peer.getAttribute('data-name')], files)
   })
 
@@ -344,33 +366,33 @@ function joined (msg, rinfo) {
   selectorEmptyState.classList.remove('show')
 }
 
-function parted (msg) {
+function parted(msg) {
   const selector = `.peer[data-name="${msg.name}"]`
   const peer = document.querySelector(selector)
   if (peer) peer.parentNode.removeChild(peer)
 }
 
-function showRejectedMessage (msg) {
+function showRejectedMessage(msg) {
   const opts = {
     type: 'info',
     buttons: ['Ok'],
     title: 'Rejected',
-    message: `${msg.name} rejected the file.`
+    message: `${msg.name} rejected the file.`,
   }
 
   dialog.showMessageBox(win, opts)
 }
 
-function cleanUp () {
+function cleanUp() {
   for (var key in registry) {
-    if (registry[key] && (Date.now() - registry[key].ctime) > 9000) {
+    if (registry[key] && Date.now() - registry[key].ctime > 9000) {
       parted(registry[key])
       registry[key] = null
     }
   }
 }
 
-server.on('error', (err) => {
+server.on('error', err => {
   console.error(err)
   server.close()
 })
@@ -389,12 +411,12 @@ server.on('message', (msg, rinfo) => {
   registry[msg.name] = msg
 })
 
-function loadAvatar (address, peerEl) {
+function loadAvatar(address, peerEl) {
   const opts = {
     host: address,
     port: 9988,
     path: '/avatar',
-    rejectUnauthorized: false
+    rejectUnauthorized: false,
   }
 
   const req = httpClient(opts, res => {
