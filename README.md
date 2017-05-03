@@ -21,6 +21,10 @@ Drop an image to your own bubble at the bottom. PeerDrop will persist this at `~
 * graphicsmagick
 * libicns (AUR)
 
+## Mac
+
+`npm run build-mac` builds app/dmg/zip packages
+
 # RUN
 To run the app, use the bin in the `node_modules` directory.
 
