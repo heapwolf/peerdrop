@@ -22,7 +22,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "./node_modules/.bin/nodemon --ext js,html --ignore node_modules/ ./node_modules/.bin/electron ./index.js",
     "postcheckout": "bin/postcheckout",
-    "build-linux": "build --linux zip deb"
+    "build-linux": "build --linux zip deb",
+    "build-mac": "build --mac"
   },
   "build": {
     "appId": "peerdrop.offlinefirst",
