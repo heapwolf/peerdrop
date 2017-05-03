@@ -1,6 +1,11 @@
 # SYNOPSIS
 An airdrop clone
 
+# Notes on the GitHub pages site
+
+- so far no tooling – it's a single, static, self-contained html page
+- to update the screenshot paste it into a GitHub issue and replace the link
+
 # AVATAR
 
 Drop an image to your own bubble at the bottom. PeerDrop will persist this at `~/avatar/`

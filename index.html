@@ -1,27 +1,89 @@
 <html>
   <head>
-    <link rel="stylesheet" href="index.css">
+  <meta charset="utf-8">
+  <title>PeerDrop – a FLOSS, cross-platform Airdrop alternative"</title>
+  <meta description="PeerDrop detects other users in the network. You can then drop them files.">
+  <style type="text/css">
+    * { box-sizing: border-box; }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+    }
+    p { max-width: 70ch; }
+    a {
+      color: inherit;
+      transition: all 0.1s ease-out;
+      text-decoration: none;
+    }
+    a:hover {
+      color: #FF00C5;
+    }
+    footer {
+      background-color: #111;
+      color: white;
+      padding: 32px;
+      font-size: 0.8rem;
+    }
+
+    footer a { text-decoration: underline; }
+    .call-to-action {
+      font-weight: 900;
+    }
+
+    .layout-container {
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+
+      -ms-flex-align: center;
+      -webkit-align-items: center;
+      -webkit-box-align: center;
+      align-items: center;
+      padding: 32px;
+    }
+    .layout-container:first-child { height: 100vh; }
+    .content-container { margin: auto; }
+    .screenshot {
+      display: block;
+      width: 100%;
+      max-width: 500px;
+    }
+    .drop-emoji {
+      display: inline-block;
+      transform: scale(1.3);
+    }
+    .download-links { display: none; /* currently needs to be build */ }
+  </style>
   </head>
 
   <body>
 
-    <div id="empty-message" class="show">Searching for Computers...</div>
-
-    <div class="close">X</div>
-
-    <div id="peers">
-      <div class="peer" id="me">
-        This Computer
+    <div class="layout-container">
+      <div class="content-container">
+        <h1>PeerDrop <span class="drop-emoji">💧</span></h1>
+        <h2>A FLOSS, cross-platform <a href="https://en.wikipedia.org/wiki/AirDrop">AirDrop</a> alternative.</h2>
+        <img class="screenshot" src="https://cloud.githubusercontent.com/assets/170145/25565895/8553818c-2dd0-11e7-8c74-937f44510070.png" alt="" />
+        <p>
+          PeerDrop detects other users in the network. You can then drop them files.
+        </p>
+        <h2>Download</h2>
+        <p>
+          A readymade build might be available in the future. For now you have to build yourself. No worries though, it isn't hard or complex to do. Have a look at <a class="call-to-action" href="https://github.com/0x00A/peerdrop#build">the build guide on GitHub</a>...
+        </p>
+        <p class="download-links"><a href="">Linux</a> | <a href="">Windows</a> | <a href="">Mac</a></p>
       </div>
     </div>
+    <footer class="layout-container">
+      <div class="content-container">
+      <p>Made mostly at <a href="http://offlinefirst.org/camp/">OfflineCamp</a> by <a href="https://github.com/0x00A/peerdrop/graphs/contributors">the contributors</a>.</p>
+      <p>You are welcome to file issues, questions and pull request <a href="">on GitHub</a>.</p>
+      <p>Copyright (c) 2017 Peerdrop contributors. <a href="">Issued under the MIT License</a>.</p>
+      </div>
+    </footer>
 
-    <div class="footer">
-      Downloaded files can be found in your Downloads folder.
-    </div>
-
-    <script>
-      const path = require('path')
-      require(path.join(__dirname, 'render.js'))
-    </script>
   </body>
 </html>
